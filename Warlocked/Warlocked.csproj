@@ -43,6 +43,9 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Entities\Units\ACharacter.cs" />
+    <Compile Include="Entities\Units\Grunt.cs" />
+    <Compile Include="Entities\Units\IUnit.cs" />
     <Compile Include="Entities\__Debug__\EternalZog.cs" />
     <Compile Include="Scenes\PlayField.cs" />
     <Compile Include="WarlockedGame.cs" />

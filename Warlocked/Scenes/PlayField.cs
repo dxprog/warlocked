@@ -17,7 +17,7 @@ namespace Warlocked.Scenes
         {
             Camera = new Camera(Vector2.Zero);
             AddEntity(Camera);
-            AddEntity(new Entities.__Debug__.EternalZog());
+            AddEntity(new Entities.Units.Grunt(0, Vector2.Zero));
         }
 
         public override void OnSceneEnd() 
