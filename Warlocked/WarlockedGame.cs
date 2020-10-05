@@ -48,7 +48,8 @@ namespace Warlocked
         {
             GameService.GetService<IRenderService>()
                 .SetGraphicsDevice(GraphicsDevice)
-                .SetInternalResolution(640, 360);
+                .SetInternalResolution(640, 360)
+                .SetSamplerState(SamplerState.PointWrap);
 
             GameService.GetService<IContentService>()
                 .Bootstrap(Content, GraphicsDevice)
