@@ -42,18 +42,24 @@ namespace Warlocked.Engine.Services
             );
         }
 
-        public void PreDraw(float DT) 
+        public void PreDraw(float DT)
         {
             IInputService inputService = GameService.GetService<IInputService>();
+            Vector2 mousePosition = inputService.GetMouseInWorldSpace2();
+
             if (inputService.WasLeftMouseButtonClicked())
             {
-                Vector2 mousePosition = inputService.GetMouseInWorldSpace2();
                 List<IUnit> units = GetAssignedUnitsFromCurrentScene();
                 bool didSelectSomething = false;
                 foreach (IUnit unit in units)
                 {
                     if (unit.SelectableArea.Contains(mousePosition))
                     {
+                        if (!inputService.IsLeftShiftHeld())
+                        {
+                            UnSelectAllUnits();
+                        }
+
                         // We don't want a single click selecting multiple units, so break after the first
                         SelectedUnits.Add(unit);
                         unit.Select();
@@ -63,11 +69,16 @@ namespace Warlocked.Engine.Services
                 }
                 if (!didSelectSomething)
                 {
-                    foreach (IUnit unit in SelectedUnits)
-                    {
-                        unit.UnSelect();
-                    }
-                    SelectedUnits.Clear();
+                    UnSelectAllUnits();
+                }
+            }
+
+            if (inputService.WasRightMouseButtonClicked())
+            {
+                foreach (IUnit unit in SelectedUnits)
+                {
+                    // Allow queuing move points when left shift is held
+                    unit.DirectToPoint(mousePosition, inputService.IsLeftShiftHeld());
                 }
             }
         }
@@ -130,6 +141,15 @@ namespace Warlocked.Engine.Services
                 .GetEntitiesOfType<IUnit>()
                 .Where(unit => unit.Team == AssignedTeam)
                 .ToList();
+        }
+
+        private void UnSelectAllUnits()
+        {
+            foreach (IUnit unit in SelectedUnits)
+            {
+                unit.UnSelect();
+            }
+            SelectedUnits.Clear();
         }
     }
 }

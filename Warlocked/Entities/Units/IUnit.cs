@@ -16,6 +16,9 @@ namespace Warlocked.Entities.Units
         void Select();
         void UnSelect();
 
+        void DirectToPoint(Vector2 Point, bool IsAdditive = false);
+        void DirectToUnit(IUnit Unit);
+
         UnitSubType GetUnitSubtype();
     }
 }
