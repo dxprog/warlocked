@@ -44,6 +44,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Engine\Services\UnitControlService.cs" />
     <Compile Include="Entities\Units\ACharacter.cs" />
     <Compile Include="Entities\Units\Grunt.cs" />
     <Compile Include="Entities\Units\IUnit.cs" />

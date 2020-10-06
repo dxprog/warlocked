@@ -30,15 +30,9 @@ namespace Warlocked.Entities.Units
         // IUnit properties/methods
         public override int MaxHealth => 50;
 
-        public override void Select()
-        {
-            throw new System.NotImplementedException();
-        }
+        public override void Select() { }
 
-        public override void UnSelect()
-        {
-            throw new System.NotImplementedException();
-        }
+        public override void UnSelect() { }
 
         // IPreDraw methods
         public override void PreDraw(float DT) { }

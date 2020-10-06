@@ -3,7 +3,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
+using Warlocked.Engine.Services;
 using WarnerEngine.Services;
 using WarnerEngine.Services.Implementations;
 
@@ -18,6 +18,7 @@ namespace Warlocked
 
         public WarlockedGame()
         {
+            GameService.RegisterService(new UnitControlService());
             GameService.Initialize();
 
             graphics = new GraphicsDeviceManager(this);
