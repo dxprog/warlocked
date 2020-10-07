@@ -3,7 +3,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
+using Warlocked.Models;
 using WarnerEngine.Services;
 using WarnerEngine.Services.Implementations;
 
@@ -19,6 +19,7 @@ namespace Warlocked
         public WarlockedGame()
         {
             GameService.Initialize();
+            Scenario.RegisterAssetLoader();
 
             graphics = new GraphicsDeviceManager(this);
             graphics.PreferredBackBufferWidth = 1280;
@@ -36,7 +37,6 @@ namespace Warlocked
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
             base.Initialize();
         }
 
