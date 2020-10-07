@@ -1,0 +1,36 @@
+﻿{
+  "Title": "Harvest",
+  "Description": "Queen Waifu assigns you to build three FARMS to provide food for the army. You will mine GOLD and gather FUEL for the war effort.\n\nA team of GRUNTS has been placed at your command to carry out all manual labor.",
+  "Objectives": [
+    {
+      "Title": "Build 3 Farms",
+      "Condition": {
+        "Entity": "FARM",
+        "Comparator": "GTE",
+        "Value": 3
+      }
+    },
+    {
+      "Title": "Mine 500 Gold",
+      "Condition": {
+        "Entity": "GOLD",
+        "Comparator": "GTE",
+        "Value": 500
+      }
+    },
+    {
+      "Title": "Gather 100 Fuel",
+      "Condition": {
+        "Entity": "FUEL",
+        "Comparator": "GTE",
+        "Value": 100
+      }
+    }
+  ],
+  "Map": {
+    "Width": 10,
+    "Height": 10,
+    "Tiles": [],
+    "Objects": []
+  }
+}
