@@ -11,37 +11,19 @@ namespace Warlocked.Entities.Units
         private const int WIDTH = 16;
         private const int HEIGHT = 16;
 
+        protected override int MoveSpeed => 60;
+
         public Grunt(int AssignedTeam, Vector2 StartingPoint) : base(AssignedTeam)
         {
             backingBox = new BackingBox(BackingBox.IType.Free, StartingPoint.X, 0, StartingPoint.Y, WIDTH, 0, HEIGHT);
         }
 
-        // ACharacter properties/methods
-        public override void DirectToPoint(Vector2 Point)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public override void DirectToUnit(IUnit Target)
-        {
-            throw new System.NotImplementedException();
-        }
-
         // IUnit properties/methods
         public override int MaxHealth => 50;
 
-        public override void Select()
-        {
-            throw new System.NotImplementedException();
-        }
+        public override void Select() { }
 
-        public override void UnSelect()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        // IPreDraw methods
-        public override void PreDraw(float DT) { }
+        public override void UnSelect() { }
 
         // IDraw methods
         public override void Draw()
