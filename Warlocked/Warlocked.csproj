@@ -46,8 +46,11 @@
   <ItemGroup>
     <Compile Include="Engine\Services\UnitControlService.cs" />
     <Compile Include="Entities\Units\ACharacter.cs" />
+    <Compile Include="Entities\Units\AResource.cs" />
+    <Compile Include="Entities\Units\Fuel.cs" />
     <Compile Include="Entities\Units\Grunt.cs" />
     <Compile Include="Entities\Units\IUnit.cs" />
+    <Compile Include="Entities\Units\ResourceBundle.cs" />
     <Compile Include="Entities\__Debug__\EternalZog.cs" />
     <Compile Include="Models\Condition.cs" />
     <Compile Include="Models\Map.cs" />
