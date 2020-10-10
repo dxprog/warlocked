@@ -11,7 +11,7 @@ module.exports = (env, argv) => {
           test: /\.(js|jsx)$/,
           exclude: /node_modules/,
           use: {
-            loader: "babel-loader"
+            loader: 'babel-loader'
           }
         },
         {
@@ -27,7 +27,7 @@ module.exports = (env, argv) => {
         },
       ]
     },
-    entry: './app/index.js',
+    entry: './app/index.jsx',
     output: {
       filename: 'index.js',
       path: path.resolve(__dirname, 'static/app')
