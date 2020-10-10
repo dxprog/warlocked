@@ -1,31 +1,37 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 
-import { TILE_WIDTH, TILE_HEIGHT } from '../lib/constants';
+import { TILE_WIDTH, TILE_HEIGHT, FRAME_DELAY } from '../lib/constants';
 
 const AnimatedTile = ({ imageData, frames }) => {
   const canvasRef = useRef(null);
-  const [ frame, setFrame ] = useState(0);
+  const startTime = Date.now();
 
   useEffect(() => {
-    const ctx = canvasRef.current.getContext('2d');
-    const frameHandle = requestAnimationFrame(() => {
-      let currentFrameIndex = frame;
+    let frameHandle;
+    const render = () => {
+      const ctx = canvasRef.current.getContext('2d');
+      const currentTime = Date.now();
+      const currentFrameIndex = (
+        Math.floor((currentTime - startTime) / FRAME_DELAY) % frames.length
+      );
       const currentFrame = frames[currentFrameIndex];
 
-      ctx.drawImage(
-        imageData,
-        currentFrame.x * TILE_WIDTH,
-        currentFrame.y * TILE_HEIGHT,
-        TILE_WIDTH,
-        TILE_HEIGHT,
-        0,
-        0,
-        TILE_WIDTH,
-        TILE_HEIGHT,
-      );
-      currentFrameIndex = currentFrameIndex + 1 < frames.length ? currentFrameIndex + 1 : 0;
-      setTimeout(() => setFrame(currentFrameIndex), 250);
-    });
+      if (frames.length) {
+        ctx.drawImage(
+          imageData,
+          currentFrame.x * TILE_WIDTH,
+          currentFrame.y * TILE_HEIGHT,
+          TILE_WIDTH,
+          TILE_HEIGHT,
+          0,
+          0,
+          TILE_WIDTH,
+          TILE_HEIGHT,
+        );
+        frameHandle = requestAnimationFrame(render);
+      }
+    };
+    render();
 
     return () => {
       cancelAnimationFrame(frameHandle);
