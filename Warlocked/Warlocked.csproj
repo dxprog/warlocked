@@ -46,9 +46,16 @@
   <ItemGroup>
     <Compile Include="Engine\Services\UnitControlService.cs" />
     <Compile Include="Entities\Units\ACharacter.cs" />
+    <Compile Include="Entities\Units\ACharacterState.cs" />
+    <Compile Include="Entities\Units\ACharacterStateMachine.cs" />
+    <Compile Include="Entities\Units\ACharacterStateMove.cs" />
+    <Compile Include="Entities\Units\ACharacterStateStopped.cs" />
     <Compile Include="Entities\Units\AResource.cs" />
     <Compile Include="Entities\Units\Fuel.cs" />
-    <Compile Include="Entities\Units\Grunt.cs" />
+    <Compile Include="Entities\Units\Grunts\Grunt.cs" />
+    <Compile Include="Entities\Units\Grunts\GruntStateMachine.cs" />
+    <Compile Include="Entities\Units\Grunts\GruntStateMove.cs" />
+    <Compile Include="Entities\Units\Grunts\GruntStateStopped.cs" />
     <Compile Include="Entities\Units\IUnit.cs" />
     <Compile Include="Entities\Units\ResourceBundle.cs" />
     <Compile Include="Entities\__Debug__\EternalZog.cs" />
