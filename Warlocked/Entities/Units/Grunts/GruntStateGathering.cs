@@ -31,6 +31,10 @@ namespace Warlocked.Entities.Units.Grunts
 
         public override ACharacterState<Grunt, Grunt.GruntStateTypes> Update(Grunt Target, float DT)
         {
+            if (resourceTarget.Health <= 0)
+            {
+                return new GruntStateStopped();
+            }
             if (!gatherTimer.Update().IsRunning)
             {
                 Target.ReceiveResourceBundle(resourceTarget.TryExploit(CARRYING_CAPACITY));
