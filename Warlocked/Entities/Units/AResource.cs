@@ -10,6 +10,11 @@ namespace Warlocked.Entities.Units
         protected int remainingResources;
         protected BackingBox backingBox;
 
+        public AResource()
+        {
+            remainingResources = MaxHealth;
+        }
+
         public abstract ResourceBundle.Resource ResourceType { get; }
         public virtual ResourceBundle? TryExploit(int RequestedAmount)
         {

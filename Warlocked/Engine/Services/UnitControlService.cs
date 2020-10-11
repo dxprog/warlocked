@@ -47,27 +47,28 @@ namespace Warlocked.Engine.Services
             IInputService inputService = GameService.GetService<IInputService>();
             Vector2 mousePosition = inputService.GetMouseInWorldSpace2();
 
+            IUnit hoveredUnit = null;
+            List<IUnit> units = GetUnitsFromCurrentScene();
+            foreach (IUnit unit in units)
+            {
+                if (unit.SelectableArea.Contains(mousePosition))
+                {
+                    hoveredUnit = unit;
+                }
+            }
+
             if (inputService.WasLeftMouseButtonClicked())
             {
-                List<IUnit> units = GetAssignedUnitsFromCurrentScene();
-                bool didSelectSomething = false;
-                foreach (IUnit unit in units)
+                if (hoveredUnit != null && hoveredUnit.Team == AssignedTeam)
                 {
-                    if (unit.SelectableArea.Contains(mousePosition))
+                    if (!inputService.IsLeftShiftHeld())
                     {
-                        if (!inputService.IsLeftShiftHeld())
-                        {
-                            UnSelectAllUnits();
-                        }
-
-                        // We don't want a single click selecting multiple units, so break after the first
-                        SelectedUnits.Add(unit);
-                        unit.Select();
-                        didSelectSomething = true;
-                        break;
+                        UnSelectAllUnits();
                     }
+                    SelectedUnits.Add(hoveredUnit);
+                    hoveredUnit.Select();
                 }
-                if (!didSelectSomething)
+                else
                 {
                     UnSelectAllUnits();
                 }
@@ -78,7 +79,14 @@ namespace Warlocked.Engine.Services
                 foreach (IUnit unit in SelectedUnits)
                 {
                     // Allow queuing move points when left shift is held
-                    unit.DirectToPoint(mousePosition, inputService.IsLeftShiftHeld());
+                    if (hoveredUnit == null)
+                    {
+                        unit.DirectToPoint(mousePosition, inputService.IsLeftShiftHeld());
+                    }
+                    else
+                    {
+                        unit.DirectToUnit(hoveredUnit);
+                    }
                 }
             }
         }
@@ -135,12 +143,9 @@ namespace Warlocked.Engine.Services
             return this;
         }
 
-        private List<IUnit> GetAssignedUnitsFromCurrentScene()
+        private List<IUnit> GetUnitsFromCurrentScene()
         {
-            return GameService.GetService<ISceneService>().CurrentScene
-                .GetEntitiesOfType<IUnit>()
-                .Where(unit => unit.Team == AssignedTeam)
-                .ToList();
+            return GameService.GetService<ISceneService>().CurrentScene.GetEntitiesOfType<IUnit>();
         }
 
         private void UnSelectAllUnits()

@@ -28,5 +28,14 @@ namespace Warlocked.Entities.Units
                 Color.Green
             );
         }
+
+        public override void PreDraw(float DT)
+        {
+            base.PreDraw(DT);
+            if (remainingResources <= 0)
+            {
+                GameService.GetService<ISceneService>().CurrentScene.RemoveEntity(this);
+            }
+        }
     }
 }

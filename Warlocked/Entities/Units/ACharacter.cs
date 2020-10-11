@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 using Microsoft.Xna.Framework;
 
@@ -19,14 +20,15 @@ namespace Warlocked.Entities.Units
 
         protected abstract int MoveSpeed { get; }
 
-        // TODO: Make this more abstract so it can contain both points and units
-        protected Queue<Vector2> MoveQueue;
+        private bool shouldProcessMoves;
+        protected Queue<object> MoveQueue;
 
         public ACharacter(int AssignedTeam)
         {
             health = MaxHealth;
             team = AssignedTeam;
-            MoveQueue = new Queue<Vector2>();
+            shouldProcessMoves = true;
+            MoveQueue = new Queue<object>();
         }
 
         public virtual void DirectToPoint(Vector2 Point, bool IsAdditive = false)
@@ -42,7 +44,24 @@ namespace Warlocked.Entities.Units
             }
         }
 
-        public virtual void DirectToUnit(IUnit Target) { }
+        public virtual void DirectToUnit(IUnit Target) 
+        {
+            MoveQueue.Clear();
+            MoveQueue.Enqueue(Target);
+        }
+
+        protected void PauseMoveProcessing()
+        {
+            shouldProcessMoves = false;
+        }
+
+        protected void ResumeMoveProcessing()
+        {
+            shouldProcessMoves = true;
+        }
+
+        protected abstract void OnArrivalAtPoint(Vector2 Point);
+        protected abstract void OnArrivalAtUnit(IUnit Unit);
 
         // IUnit properties/methods
         public int Team => team;
@@ -64,18 +83,38 @@ namespace Warlocked.Entities.Units
         // IPreDraw methods
         public virtual void PreDraw(float DT)
         {
-            if (MoveQueue.Count > 0)
+            if (shouldProcessMoves && MoveQueue.Count > 0)
             {
-                Vector2 currentMove = MoveQueue.Peek();
-                Vector2 vectorToMove = currentMove - GraphicsHelper.FlattenVector3(backingBox.GetCenterPoint());
-                if (vectorToMove.Length() > ARRIVAL_THRESHOLD) 
+                switch (MoveQueue.Peek()) 
                 {
-                    Vector2 unitVector = Vector2.Normalize(vectorToMove);
-                    backingBox.Move(new Vector3(unitVector.X, 0, unitVector.Y) * MoveSpeed * DT);
-                }
-                else
-                {
-                    MoveQueue.Dequeue();
+                    case Vector2 currentMove:
+                        Vector2 vectorToMove = currentMove - GraphicsHelper.FlattenVector3(backingBox.GetCenterPoint());
+                        if (vectorToMove.Length() > ARRIVAL_THRESHOLD)
+                        {
+                            Vector2 unitVector = Vector2.Normalize(vectorToMove);
+                            backingBox.Move(new Vector3(unitVector.X, 0, unitVector.Y) * MoveSpeed * DT);
+                        }
+                        else
+                        {
+                            MoveQueue.Dequeue();
+                            OnArrivalAtPoint(currentMove);
+                        }
+                        break;
+                    case IUnit targetUnit:
+                        vectorToMove = GraphicsHelper.FlattenVector3(targetUnit.GetBackingBox().GetCenterPoint() - backingBox.GetCenterPoint());
+                        if (vectorToMove.Length() > (backingBox.Width + targetUnit.GetBackingBox().Width) / 2 + ARRIVAL_THRESHOLD)
+                        {
+                            Vector2 unitVector = Vector2.Normalize(vectorToMove);
+                            backingBox.Move(new Vector3(unitVector.X, 0, unitVector.Y) * MoveSpeed * DT);
+                        }
+                        else
+                        {
+                            MoveQueue.Dequeue();
+                            OnArrivalAtUnit(targetUnit);
+                        }
+                        break;
+                    default:
+                        throw new Exception("Unsupported move target type");
                 }
             }
         }
