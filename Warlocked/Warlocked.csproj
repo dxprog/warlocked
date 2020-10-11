@@ -53,6 +53,7 @@
     <Compile Include="Entities\Units\AResource.cs" />
     <Compile Include="Entities\Units\Fuel.cs" />
     <Compile Include="Entities\Units\Grunts\Grunt.cs" />
+    <Compile Include="Entities\Units\Grunts\GruntStateGathering.cs" />
     <Compile Include="Entities\Units\Grunts\GruntStateMachine.cs" />
     <Compile Include="Entities\Units\Grunts\GruntStateMove.cs" />
     <Compile Include="Entities\Units\Grunts\GruntStateStopped.cs" />

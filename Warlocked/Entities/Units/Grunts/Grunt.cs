@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-
+using System.Collections;
 using WarnerEngine.Lib.Components;
 using WarnerEngine.Services;
 
@@ -8,11 +8,10 @@ namespace Warlocked.Entities.Units.Grunts
     public sealed class Grunt : ACharacter<Grunt, Grunt.GruntStateTypes>
     {
         public enum GruntStateTypes { Stopped, Moving, Gathering }
+
         // Own properties/methods
         private const int WIDTH = 16;
         private const int HEIGHT = 16;
-
-        private const int CARRYING_CAPACITY = 10;
 
         private GruntStateMachine stateMachine;
         public override ACharacterStateMachine<Grunt, GruntStateTypes> StateMachine { get => stateMachine; }
@@ -26,16 +25,9 @@ namespace Warlocked.Entities.Units.Grunts
             stateMachine = new GruntStateMachine(new GruntStateStopped(), this);
         }
 
-        protected override void OnArrivalAtPoint(Vector2 Point) {}
-
-        protected override void OnArrivalAtUnit(IUnit Unit)
+        public void ReceiveResourceBundle(ResourceBundle? Bundle)
         {
-            switch (Unit)
-            {
-                case AResource resource:
-                    carriedResourceBundle = resource.TryExploit(CARRYING_CAPACITY);
-                    break;
-            }
+            carriedResourceBundle = Bundle;
         }
 
         // IUnit properties/methods

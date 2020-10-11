@@ -46,9 +46,6 @@ namespace Warlocked.Entities.Units
             MoveQueue.Enqueue(Target);
         }
 
-        protected abstract void OnArrivalAtPoint(Vector2 Point);
-        protected abstract void OnArrivalAtUnit(IUnit Unit);
-
         // IUnit properties/methods
         public int Team => team;
         public Rectangle SelectableArea => backingBox.GetBoundingRectangle();

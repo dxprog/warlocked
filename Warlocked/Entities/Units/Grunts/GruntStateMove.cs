@@ -1,4 +1,6 @@
-﻿namespace Warlocked.Entities.Units.Grunts
+﻿using Microsoft.Xna.Framework;
+
+namespace Warlocked.Entities.Units.Grunts
 {
     public class GruntStateMove : ACharacterStateMove<Grunt, Grunt.GruntStateTypes>
     {
@@ -13,7 +15,13 @@
 
         public override ACharacterState<Grunt, Grunt.GruntStateTypes> GetArrivalState(object Target)
         {
-            return new GruntStateStopped();
+            switch (Target)
+            {
+                case AResource resource:
+                    return new GruntStateGathering(resource);
+                default:
+                    return new GruntStateStopped();
+            }
         }
 
         public override ACharacterState<Grunt, Grunt.GruntStateTypes> ConsiderStateChange(ACharacterState<Grunt, Grunt.GruntStateTypes> CandidateState, Grunt Target)
