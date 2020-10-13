@@ -1,33 +1,30 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 using Microsoft.Xna.Framework;
 
 using WarnerEngine.Lib;
 using WarnerEngine.Lib.Components;
-using WarnerEngine.Lib.Helpers;
 
 namespace Warlocked.Entities.Units
 {
-    public abstract class ACharacter : IUnit
+    public abstract class ACharacter<TCharacter, TCharacterStateTypes> : IUnit where TCharacter : ACharacter<TCharacter, TCharacterStateTypes>
     {
-        protected const int ARRIVAL_THRESHOLD = 10;
-
         // Own properties/methods
         protected int health;
         protected int team;
         protected BackingBox backingBox;
 
-        protected abstract int MoveSpeed { get; }
+        public abstract ACharacterStateMachine<TCharacter, TCharacterStateTypes> StateMachine { get; }
 
-        // TODO: Make this more abstract so it can contain both points and units
-        protected Queue<Vector2> MoveQueue;
+        public abstract int MoveSpeed { get; }
+
+        public Queue<object> MoveQueue { get; private set; }
 
         public ACharacter(int AssignedTeam)
         {
             health = MaxHealth;
             team = AssignedTeam;
-            MoveQueue = new Queue<Vector2>();
+            MoveQueue = new Queue<object>();
         }
 
         public virtual void DirectToPoint(Vector2 Point, bool IsAdditive = false)
@@ -43,7 +40,11 @@ namespace Warlocked.Entities.Units
             }
         }
 
-        public virtual void DirectToUnit(IUnit Target) { }
+        public virtual void DirectToUnit(IUnit Target) 
+        {
+            MoveQueue.Clear();
+            MoveQueue.Enqueue(Target);
+        }
 
         // IUnit properties/methods
         public int Team => team;
@@ -65,20 +66,7 @@ namespace Warlocked.Entities.Units
         // IPreDraw methods
         public virtual void PreDraw(float DT)
         {
-            if (MoveQueue.Count > 0)
-            {
-                Vector2 currentMove = MoveQueue.Peek();
-                Vector2 vectorToMove = currentMove - GraphicsHelper.FlattenVector3(backingBox.GetCenterPoint());
-                if (vectorToMove.Length() > ARRIVAL_THRESHOLD) 
-                {
-                    Vector2 unitVector = Vector2.Normalize(vectorToMove);
-                    backingBox.Move(new Vector3(unitVector.X, 0, unitVector.Y) * MoveSpeed * DT);
-                }
-                else
-                {
-                    MoveQueue.Dequeue();
-                }
-            }
+            StateMachine.Update(this as TCharacter, DT);
         }
 
         // IDraw methods
